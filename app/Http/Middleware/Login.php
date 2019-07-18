@@ -15,15 +15,16 @@ class Login
      */
     public function handle($request, Closure $next)
     {
-
-    
         //前置
         // echo 111;
-    $res = $request->session()->has('username');
-       // dd($request->session());
-    $response=$next($request);
-      //后置
-    // echo 2222;
-    return $response;
+    $count = $request->session()->has('register_name');
+
+     // dd($count);
+    if(empty($count)){
+        return redirect('Admin/login');
+    }else{
+        
+    }
+   return $next($request);
     }
 }

@@ -69,7 +69,7 @@ class StudentController extends Controller
    public function index(Request $request)
   {
   	$info = DB::connection('mysql_bbs')->table('student')->get()->toArray();
-  	dd($info);
+  	// dd($info);
   	$redis = new \ Redis();
   	$redis->connect('127.0.0.1','6379');
   	$redis->incr('num');
@@ -146,9 +146,21 @@ class StudentController extends Controller
    }
 
    public function do_goodsadd(Request $request){
-   	$path = $request->file('goods_pic')->store('goods');
+   	$data = $request->all();
+   	// dd($data);
+   	$files = $request->file('goods_pic');
+   	if(empty($files)){
+   		
+   		//未传图片
+   		echo "fail";die();
+   	}else{
+   		$path = $files->store('goods');
+   	}
+   	dd($path);
    	echo asset('storage').'/'.$path;
    	
    }
+
+    
 
 }

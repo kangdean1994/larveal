@@ -1,5 +1,4 @@
 @extends('layout.parent')
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
