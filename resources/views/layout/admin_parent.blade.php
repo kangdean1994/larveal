@@ -62,6 +62,32 @@
         </li>
       </ul>
 
+       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">车票管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="{{url('Admin/ticket_create')}}">添加车票</a></dd>
+            <dd><a href="{{url('Index/ticket_list')}}">车票列表</a></dd>
+          </dl>
+        </li>
+      </ul>
+
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">物业管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="">数据统计</a></dd>
+            <dd><a href="{{url('Car/door_add')}}">添加门卫</a></dd>
+          </dl>
+        </li>
+      </ul>
+
+
+
+
+
+
+
     </div>
   </div>
   

@@ -6,7 +6,7 @@
 	@section('title','娃哈哈')
 </head>
 <body>
-		@csrf
+	@csrf
 @section("pages section")
 <div class="pages section">
 		<div class="container">
@@ -26,6 +26,18 @@
 						<div class="input-field">
 							<input type="password" placeholder="PASSWORD" class="validate" required="" name="register_pwd">
 						</div>
+					
+
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">管理员权限</label>
+					    <div class="layui-input-block">
+					     <input type="radio" name="register_state" value="1">超级管理员
+					     <input type="radio" name="register_state" value="2" >管理员
+					     <input type="radio" name="register_state" value="3">普通用户
+					     <input type="radio" name="register_state" value="4">黑名单
+					    </div>
+					  </div>
+
 						<input type="submit" class="btn button-default" value="REGISTER">
 					</form>
 				</div>

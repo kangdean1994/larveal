@@ -82,7 +82,7 @@ class Index extends Controller
     	$info = DB::table('goods')->where($where)->first();
     
 
-    	return view('Index/list',['info'=>$info]);
+    	return view('index/list',['info'=>$info]);
     }
 
     public function cart_save(Request $request){
@@ -222,6 +222,78 @@ class Index extends Controller
     		 return view('index/order_list',['data'=>$data]);
     		
     	}
+
+
+
+
+ public function ticket_list(Request $request){
+   $req = $request->all()??'';
+    $go_station = $req['go_station']??'';
+    $end_station = $req['end_station']??'';
+   // dd($req);
+   //连接redis
+   $redis = new \redis();
+   $redis->connect('127.0.0.1','6379');
+   //判断redis里面有没有ticket_key
+   if(!$redis->get('ticket_info')){
+    if(!empty($req['go_station'])|| !empty($req['end_station'])){
+        //记录搜索次数
+        $redis->incr('ticket_num');
+        $list = DB::table('ticket')
+        ->where('go_station','like',"%${req['go_station']}%")
+        ->where('end_station','like',"%${req['end_station']}%")
+        ->get();
+    }else{
+        //没有搜索所条件返回全部数据
+        $list = DB::table('ticket')->get();
+    }
+    //redis获取访问次数
+    $ticket_num = $redis->get('ticket_num');
+    //判断访问次数
+    if($ticket_num>20){
+        $redis_info = json_encode($list);
+        $redis->set('ticket_info',$redis_info,3*60);
+    }
+}else{
+    $list = json_encode($redis->get('ticket_info'),true);
+}
+    echo "访问次数:".$redis->get('ticket_num');
+
+        //$redis->set('key','');
+    return view('index/ticket_list',['list'=>$list,'go_station'=>$go_station,'end_station'=>$end_station]);
+    }
+
+ //    $go_station = $request->all('go_station')['go_station']??'';
+ //    // dd($go_station);
+ //    $end_station = $request->all('end_station')['end_station']??'';
+ //      $redis = new \ Redis();
+ //      $redis->connect('127.0.0.1','6379');
+ //        $num =$redis->incr('num');
+     
+ //      $where =[];
+ //    if(empty($go_station)){
+ //        $where = [
+ //        ['end_station','like',"%{$end_station}%"]
+ //        ];
+ //    }
+ //    if(empty($end_station)){
+ //        $where = [
+ //        ['go_station','like',"%{$go_station}%"]
+ //        ];
+ //    }
+    
+ //    if($go_station && $end_station){
+ //        $where = [
+ //            ['go_station','like',"%{$go_station}%"],
+ //            ['end_station','like',"%{$end_station}%"]
+ //        ];
+ //    }
+
+ //    $data = DB::table('ticket')->where($where)->paginate(2);
+ //    // dd($data);
+ //    return view('index/ticket_list',['data'=>$data,'go_station'=>$go_station,'end_station'=>$end_station,'num'=>$num]);
+ // }
+
 
 
 }

@@ -44,7 +44,7 @@ Route::get('/Index/cart_buy','Index@cart_buy');
 Route::get('/Index/buy_delete','Index@buy_delete');
 Route::get('/Index/order_create','Index@order_create');
 Route::get('/Index/order_list','Index@order_list');
-
+Route::get('/Index/ticket_list','Index@ticket_list');
 
 
 
@@ -70,11 +70,21 @@ Route::group(['middleware' => ['login']], function(){
 	Route::get('/Admin/user_create','Admin@user_create');
 	Route::post('/Admin/user_save','Admin@user_save');
 	Route::get('/Admin/user_index','Admin@user_index');
-
 	Route::get('/Admin/exit','Admin@exit');
 	
-
+	//后台车票添加
+	Route::get('/Admin/ticket_create','Admin@ticket_create');
+	Route::post('/Admin/ticket_save','Admin@ticket_save');
 	
+	//后台题库添加
+	Route::get('/Admin/question_add','Admin@question_add');
+	Route::post('/Admin/do_add','Admin@do_add');
+    Route::get('/Admin/addPagers.blade.php','Admin@addPagers.blade.php');
+    Route::get('/Admin/question_index','Admin@question_index');
+    Route::get('/Admin/papers','Admin@addPagers');
+    Route::get('/Admin/testDetail','Admin@testDetail');
+    Route::get('/Admin/testlist','Admin@testlist');
+
 });
 
 	// Route::get('/Admin/update','Admin@update');
@@ -89,3 +99,108 @@ Route::group(['middleware' => ['goods']], function () {
 Route::get('pay', 'PayController@do_pay');
 Route::get('return_url', 'PayController@return_url');//同步
 Route::post('notify_url', 'PayController@notify_url');//异步
+
+
+
+
+ Route::get('/Search/search_add','Search@search_add');
+ Route::get('/Search/search_question','Search@search_question');
+ Route::post('/Search/question_add','Search@question_add');
+ Route::post('/Search/do_add','Search@do_add');
+ Route::get('/Search/search_dan','Search@search_dan');
+ Route::get('/Search/search_fu','Search@search_fu');
+ Route::post('/Search/dan_add','Search@dan_add');
+ Route::post('/Search/fu_add','Search@fu_add');
+ Route::get('/Search/search_list','Search@search_list');
+ Route::get('/Search/question_delete','Search@question_delete');
+ Route::get('/Search/search_order','Search@search_order');
+
+
+ Route::get('/Cai/create','Cai@create');
+ Route::post('/Cai/save','Cai@save');
+ Route::get('/Cai/list','Cai@list');
+ Route::get('/Cai/delete','Cai@delete');
+ Route::get('/Cai/add','Cai@add');
+ Route::post('/Cai/do_add','Cai@do_add');
+ Route::get('/Cai/order_list','Cai@order_list');
+ Route::get('/Cai/do_look','Cai@do_look');
+ Route::get('/Cai/cai_result','Cai@cai_result');
+ Route::post('/Cai/do_result','Cai@do_result');
+
+  Route::get('/Car/create','Car@create');
+  Route::get('/Car/add','Car@add');
+  Route::post('/Car/do_add','Car@do_add');
+  Route::get('/Car/list','Car@list');
+  Route::get('/Car/update','Car@update');
+  Route::get('/Car/car_list','Car@car_list');
+
+
+
+    Route::get('/Car/address','Car@address');
+    Route::post('/Car/do_address','Car@do_address');
+    Route::get('/Car/list_address','Car@list_address');
+
+
+
+
+
+
+//留言板登录
+ Route::get('/Message/login','Message@login');
+ Route::post('/Message/do_login','Message@do_login');
+Route::group(['middleware' => ['message']], function(){
+
+//留言板添加
+  // Route::get('/Message/create','Message@create');
+
+});
+Route::post('message_info','Message@message_info');
+Route::get('/Message/add','Message@add');
+ Route::post('/Message/save','Message@save');
+ Route::get('/Message/delete','Message@delete');
+
+
+
+
+
+
+	
+////////////////////////////////////////////////////
+ Route::get('/Wechat/get_access_token','Wechat@get_access_token');
+ Route::get('/Wechat/get_user_list','Wechat@get_user_list');
+ Route::get('/Wechat/get_user_info','Wechat@get_user_info');
+ Route::get('/Wechat/pro','Wechat@pro');
+
+ Route::get('/Wechat/login','Wechat@login');
+ Route::get('/Wechat/code','Wechat@code');
+
+ Route::get('/Wechat/template_list','Wechat@template_list');
+ Route::get('/Wechat/del_template','Wechat@del_template');
+ Route::get('/Wechat/push_template','Wechat@push_template');
+ Route::get('/Wechat/upload_source','Wechat@upload_source');
+ Route::post('/Wechat/do_upload','Wechat@do_upload');
+
+ Route::get('/Wechat/add_tag','Wechat@add_tag');
+ Route::post('/Wechat/do_add_tag','Wechat@do_add_tag');
+ Route::get('/Wechat/tag_list','Wechat@tag_list');
+ Route::get('/Wechat/del_tag','Wechat@del_tag');
+ Route::get('/Wechat/set_tag','Wechat@set_tag');
+ Route::get('/Wechat/user_tag_list','Wechat@user_tag_list');
+ Route::get('/Wechat/user_list','Wechat@user_list');
+ Route::get('/Wechat/push_message','Wechat@push_message');
+ Route::get('/Wechat/message','Wechat@message');
+ Route::get('/Wechat/message_list','Wechat@message_list');
+  Route::get('/Wechat/event','Wechat@event');
+  
+  
+
+
+
+
+
+
+  
+
+////////////////////////////////////////////////////
+
+ 

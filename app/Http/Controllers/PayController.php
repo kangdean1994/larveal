@@ -33,8 +33,8 @@ class PayController extends Controller
         // dd($data);
        // $this->ali_pay($oid);
 	   $order = [
-            'out_trade_no' => "$data->oid",
-            'total_amount' => "$data->pay_money",
+            'out_trade_no' => $data->oid,
+            'total_amount' => $data->pay_money,
             'subject' => 'test subject - 测试',
         ];
 		return Pay::alipay()->web($order);
@@ -157,6 +157,7 @@ class PayController extends Controller
     {
         header('Refresh:2;url=/order_list');
         echo "<h2>订单： ".$_GET['out_trade_no'] . ' 支付成功，正在跳转</h2>';
+        
     }
     /**
      * 支付宝异步通知
@@ -165,6 +166,7 @@ class PayController extends Controller
     {
         $data = json_encode($_POST);
         $log_str = '>>>> '.date('Y-m-d H:i:s') . $data . "<<<<\n\n";
+
         //记录日志
         file_put_contents(storage_path('logs/alipay.log'),$log_str,FILE_APPEND);
         //验签
@@ -179,7 +181,10 @@ class PayController extends Controller
             file_put_contents(storage_path('logs/alipay.log'),$log_str,FILE_APPEND);
             //验证订单交易状态
             if($_POST['trade_status']=='TRADE_SUCCESS'){
-                
+                //修改订单状态
+                $arr=['state'=>2,'pay_time'=>time()];
+                $up=DB::table('order')->update($arr);
+                //清理购物车
             }
         }
         
@@ -209,5 +214,14 @@ class PayController extends Controller
             openssl_free_key($res);
         }
         return $result;
+    }
+
+    public function return_url(){
+        return redirect('Index/order_list');
+    }
+
+
+    public function notify_url(){
+
     }
 }

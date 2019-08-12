@@ -1,0 +1,43 @@
+@extends('layout.admin_parent')
+@section('admin')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>车库管理</title>
+</head>
+<body>
+<form action="" align="center">	
+	<table border="1">
+		车库管理系统
+		<tr>
+			<td>ID</td>
+			<td>车牌号</td>
+			<td>入库时间</td>
+			<td>车辆状态</td>
+			<td>车辆出库</td>
+			<td>收费</td>
+		</tr>
+	@foreach($data as $item)
+		<tr>
+			<td>{{$item->c_id}}</td>
+			<td>{{$item->car_name}}</td>
+			<td>{{date("Y-m-d H:i:s",$item->add_time)}}</td>
+			<td>{{$item->c_state}}</td>
+			<td>{{date("Y-m-d H:i:s",$item->del_time)}}</td>
+			<td></td>
+		</tr>
+	@endforeach
+		
+	</table>
+		<tr>
+			<td>
+				<a href="{{url('Car/create')}}">车辆入库</a>
+			</td>	
+		</tr>
+</form>
+
+</body>
+</html>
+
+@endsection
