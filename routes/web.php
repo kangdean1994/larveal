@@ -194,6 +194,8 @@ Route::get('/Message/add','Message@add');
  Route::get('/Wechat/seconds_user_list','Wechat@seconds_user_list');
  Route::get('/Wechat/seconds_qr','Wechat@seconds_qr');
 
+
+
  
   
 

@@ -55,13 +55,13 @@ class Wechat extends Controller
             $re=$this->post($url,json_encode($data));
 
 		  	$request->session()->put('data',$data);
-		  	return redirect('Wechat/upload_source');
+		  	return redirect('wechat/upload_source');
 		  }else{
 		  	$res = DB::table('wechat_user')->insert(['openid'=>$openid]);
 		  	// dd($res);
 		  	if($res){
 		  		$request->session()->put('res',$res);
-		  		return redirect('Wechat/upload_source');
+		  		return redirect('wechat/upload_source');
 		  	}else{
 		  		echo "失败";
 		  	}
@@ -211,7 +211,7 @@ class Wechat extends Controller
     {
 
         
-    	return view('Wechat/uploadSource');
+    	return view('wechat/uploadSource');
     }
 
      
@@ -309,7 +309,7 @@ class Wechat extends Controller
         */
         public function add_tag()
         {
-            return view('Wechat/add_tag');  
+            return view('wechat/add_tag');
         }
 
          public function do_add_tag(Request $request)
@@ -320,7 +320,7 @@ class Wechat extends Controller
                     ];
             $re = $this->post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
              // dd(json_decode($re,1));
-              return redirect('Wechat/tag_list');
+              return redirect('wechat/tag_list');
         }
 
         //标签下粉丝列表
@@ -332,7 +332,7 @@ class Wechat extends Controller
             // dd($data);
             $data = json_decode($data,1)['tags'];
             // dd($data);
-            return view('Wechat/tag_list',['data'=>$data]);
+            return view('wechat/tag_list',['data'=>$data]);
         }
 
 
@@ -347,7 +347,7 @@ class Wechat extends Controller
             $re = json_decode($res,1);
             // dd($re);
             if($re['errcode']==0){
-                return redirect('Wechat/tag_list');
+                return redirect('wechat/tag_list');
             }else{
                 echo "程序错误,返回码为$re[errcode]";
             }
@@ -369,7 +369,7 @@ class Wechat extends Controller
 
            $res = json_decode($res,1);
              // dd($res);
-            return redirect('Wechat/tag_list');
+            return redirect('wechat/tag_list');
           
            
         }
@@ -387,7 +387,7 @@ class Wechat extends Controller
           // dd($re);
           $re = json_decode($re,1)['data']['openid'];
            // dd($re);
-          return view('Wechat/user_list',['re'=>$re]);
+          return view('wechat/user_list',['re'=>$re]);
            
         }
 
@@ -401,7 +401,7 @@ class Wechat extends Controller
                 'tagid'=>$id
             ];
             // dd($tagid);
-            return view('Wechat/message_list',['tagid'=>$tagid]);
+            return view('wechat/message_list',['tagid'=>$tagid]);
         }
 
         public function push_message(Request $request)
@@ -426,28 +426,20 @@ class Wechat extends Controller
              dd($re);
             }
 
-
-            public function event()
-            {
-                echo $_GET['echostr'];
-                 die();
-            }
-
-
             public function seconds_user_list()
             {
                 $data = DB::table('user')->get();
                 // dd($data);
-                return view('Wechat/seconds_user_list',['data'=>$data]);
+                return view('wechat/seconds_user_list',['data'=>$data]);
             }
 
 
             public function seconds_qr(Request $request)
             {
                 $id = $request->all()['id'];
-                // dd($id);
+                 // dd($id);
                 $url = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$this->get_access_token();
-                 // dd($url);
+                    // dd($url);
                 $info = [
                 // 'id'=>$id,
                 "action_name"=>"QR_LIMIT_SCENE", 
@@ -458,18 +450,77 @@ class Wechat extends Controller
                     ]
                 ];
                  
-                 // dd($info);
+                    // dd($info);
                    $res = $this->post($url,json_encode($info));
-                   // dd($res);
-                   $res1 = json_decode($res,1);
-                   // dd($res1);
-                   $ticket = $res1['ticket'];
-                   // dd($ticket); 
+                    // dd($res);
+                   $res = json_decode($res,1);
+                        // dd($res);
+                   $ticket = $res['ticket'];
+                    // dd($ticket); 
                    $url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$ticket;
-                    dd($url);
+                   // dd($url);
+                   $where = [];
+                   $where = [
+                    'user_id'=>$id,
+                   ];
+                   // dd($where);
+                    $data = DB::table('user')->where($where)->update(['qrcode_url'=>$url]);
 
+                    return redirect('Wechat/seconds_user_list');
 
             }
+
+
+             public function event()
+            {
+                $data = file_get_contents("php://input");
+                //解析XML
+                //将XML字符串转换成对象
+                $xml = simplexml_load_string($data,'SimpleXMLElement',LIBXML_NOCDATA);
+                //再转换成数组
+                $xml = (array)$xml;
+                $log_str = date('Y-m-d H:i:s').'\n'.$data."\n<<<";
+                
+                 file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
+                  
+                if($xml['MsgType']=='event'){
+                    if($xml['Event']=='subscribe'){
+                        //关注
+                        if(isset($xml['Eventkey'])){
+                            //拉新操作
+                            $agent_code = explode('_',$xml['Eventkey'])[1];
+                            $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FormUserName']])->first();
+                            if(empty($agent_info)){
+                                DB::table('user_agent')->insert([
+                                'user_id'=>$agent_code,
+                                'openid'=>$xml['FormUserName'],
+                                'add_time'=>time()
+                                    ]);
+                            }
+                        }
+                        $message = '娃哈哈';
+                       
+                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                        echo $xml_str;
+                    }
+                        
+                }elseif($xml['MsgType']=='text'){
+                    $message = '娃哈哈!';
+                    $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                    echo $xml_str;
+                }
+                //echo $_GET['echostr'];  //第一次访问
+            }
+
+
+
+
+
+
+
+
+
+
 
 
 
