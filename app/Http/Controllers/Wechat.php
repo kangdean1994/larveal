@@ -434,10 +434,42 @@ class Wechat extends Controller
             }
 
 
+            public function seconds_user_list()
+            {
+                $data = DB::table('user')->get();
+                // dd($data);
+                return view('Wechat/seconds_user_list',['data'=>$data]);
+            }
 
 
+            public function seconds_qr(Request $request)
+            {
+                $id = $request->all()['id'];
+                // dd($id);
+                $url = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$this->get_access_token();
+                 // dd($url);
+                $info = [
+                // 'id'=>$id,
+                "action_name"=>"QR_LIMIT_SCENE", 
+                "action_info"=> [
+                        "scene"=> [
+                            "scene_id"=> 123
+                        ]
+                    ]
+                ];
+                 
+                 // dd($info);
+                   $res = $this->post($url,json_encode($info));
+                   // dd($res);
+                   $res1 = json_decode($res,1);
+                   // dd($res1);
+                   $ticket = $res1['ticket'];
+                   // dd($ticket); 
+                   $url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$ticket;
+                    dd($url);
 
 
+            }
 
 
 

@@ -190,8 +190,11 @@ Route::get('/Message/add','Message@add');
  Route::get('/Wechat/push_message','Wechat@push_message');
  Route::get('/Wechat/message','Wechat@message');
  Route::get('/Wechat/message_list','Wechat@message_list');
-  Route::get('/Wechat/event','Wechat@event');
-  
+ Route::get('/Wechat/event','Wechat@event');
+ Route::get('/Wechat/seconds_user_list','Wechat@seconds_user_list');
+ Route::get('/Wechat/seconds_qr','Wechat@seconds_qr');
+
+ 
   
 
 
