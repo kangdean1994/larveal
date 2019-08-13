@@ -471,50 +471,88 @@ class Wechat extends Controller
             }
 
 
-             public function event()
-            {
-                $data = file_get_contents("php://input");
-                //解析XML
-                //将XML字符串转换成对象
-                $xml = simplexml_load_string($data,'SimpleXMLElement',LIBXML_NOCDATA);
-                //再转换成数组
-                $xml = (array)$xml;
-                $log_str = date('Y-m-d H:i:s').'\n'.$data."\n<<<";
+            //  public function event()
+            // {
+            //     $data = file_get_contents("php://input");
+            //     //解析XML
+            //     //将XML字符串转换成对象
+            //     $xml = simplexml_load_string($data,'SimpleXMLElement',LIBXML_NOCDATA);
+            //     //再转换成数组
+            //     $xml = (array)$xml;
+            //     $log_str = date('Y-m-d H:i:s').'\n'.$data."\n<<<";
                 
-                 file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
+            //      file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
                   
-                if($xml['MsgType']=='event'){
-                    if($xml['Event']=='subscribe'){
-                        //关注
-                        if(isset($xml['Eventkey'])){
-                            //拉新操作
-                            $agent_code = explode('_',$xml['Eventkey'])[1];
-                            $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FormUserName']])->first();
-                            if(empty($agent_info)){
-                                DB::table('user_agent')->insert([
-                                'user_id'=>$agent_code,
-                                'openid'=>$xml['FormUserName'],
-                                'add_time'=>time()
-                                    ]);
-                            }
-                        }
-                        $message = '娃哈哈';
+            //     if($xml['MsgType']=='event'){
+            //         if($xml['Event']=='subscribe'){
+            //             //关注
+            //             if(isset($xml['Eventkey'])){
+            //                 //拉新操作
+            //                 $agent_code = explode('_',$xml['Eventkey'])[1];
+            //                 $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FormUserName']])->first();
+            //                 if(empty($agent_info)){
+            //                     DB::table('user_agent')->insert([
+            //                     'user_id'=>$agent_code,
+            //                     'openid'=>$xml['FormUserName'],
+            //                     'add_time'=>time()
+            //                         ]);
+            //                 }
+            //             }
+            //             $message = '娃哈哈';
                        
-                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                        echo $xml_str;
-                    }
+            //             $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+            //             echo $xml_str;
+            //         }
                         
-                }elseif($xml['MsgType']=='text'){
-                    $message = '娃哈哈!';
-                    $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                    echo $xml_str;
-                }
-                //echo $_GET['echostr'];  //第一次访问
+            //     }elseif($xml['MsgType']=='text'){
+            //         $message = '娃哈哈!';
+            //         $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+            //         echo $xml_str;
+            //     }
+            //     //echo $_GET['echostr'];  //第一次访问
+            // }
+
+
+
+    public function event()
+    {
+        $access_token=$this->access_token();
+        $data=file_get_contents("php://input");
+        file_put_contents(storage_path('/logs/wechat.log'),$data);
+        //转对象
+        $data=simplexml_load_string($data,'SimpleXMLElement',LIBXML_NOCDATA);
+        //dd($data);
+        //转数组
+        $data=get_object_vars($data);
+//        dd($data['Content']);
+    
+        if((array_key_exists('Content',$data))==FALSE){
+            if($data['Event']=="subscribe"){
+                //未关注
+        
+                $xml_str = '<xml><ToUserName><![CDATA['.$data['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$data['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[欢迎关注本公号，你好]]></Content></xml>';
+                //响应回去
+                echo $xml_str;die;
+            }else{
+                //已关注
+                $xml_str = '<xml><ToUserName><![CDATA['.$data['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$data['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你已关注本公众号,你好]]></Content></xml>';
+                //响应回去
+                echo $xml_str;die;
             }
-
-
-
-
+        }else{
+            $info="你好";
+            if($data['Content']=='你好'){
+                $info="你也好";
+            }elseif($data['Content']=='傻逼'){
+                $info="你才是傻逼";
+            }elseif($data['Content']=='我++尼玛'){
+                $info="我还曹尼玛呐!";
+            }
+            $xml_str = '<xml><ToUserName><![CDATA['.$data['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$data['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$info.']]></Content></xml>';
+            //响应回去
+            echo $xml_str;
+        }
+    }
 
 
 

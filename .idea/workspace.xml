@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2dde6186-3173-4edc-85b6-22b1cc5d5d5b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" afterDir="false" />
-    </list>
+    <list default="true" id="2dde6186-3173-4edc-85b6-22b1cc5d5d5b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,8 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1024">
-              <caret line="472" selection-start-line="472" selection-end-line="472" />
+            <state relative-caret-position="217">
+              <caret line="484" column="18" lean-forward="true" selection-start-line="484" selection-start-column="18" selection-end-line="484" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -236,11 +233,12 @@
       <workItem from="1564663331874" duration="208000" />
       <workItem from="1565680814266" duration="106000" />
       <workItem from="1565680949030" duration="11000" />
+      <workItem from="1565697627486" duration="102000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3273000" />
+    <option name="totallyTimeSpent" value="3375000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -323,8 +321,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1024">
-          <caret line="472" selection-start-line="472" selection-end-line="472" />
+        <state relative-caret-position="217">
+          <caret line="484" column="18" lean-forward="true" selection-start-line="484" selection-start-column="18" selection-end-line="484" selection-end-column="18" />
         </state>
       </provider>
     </entry>
