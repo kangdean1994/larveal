@@ -44,7 +44,7 @@ class Admin extends Controller
 		// dd($register_name);
 		$request->session()->put('register_name',$count);
 		
-		return redirect('Message/create');
+		return redirect('Message/add');
 	}else{
 
 	 return redirect('Admin/login');

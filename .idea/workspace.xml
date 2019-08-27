@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dde6186-3173-4edc-85b6-22b1cc5d5d5b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/myshop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/myshop.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,17 +42,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1128">
-              <caret line="450" column="18" selection-start-line="450" selection-start-column="18" selection-end-line="450" selection-end-column="18" />
+            <state relative-caret-position="8664">
+              <caret line="461" column="18" selection-start-line="461" selection-start-column="18" selection-end-line="461" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-171" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config/wechat.php">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -178,6 +185,16 @@
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/phar-io/version" />
       <path value="$PROJECT_DIR$/vendor/opis/closure" />
+      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/wechat" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/laravel-wechat" />
+      <path value="$PROJECT_DIR$/vendor/overtrue/socialite" />
+      <path value="$PROJECT_DIR$/vendor/easywechat-composer/easywechat-composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/psr-http-message-bridge" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
     </include_path>
   </component>
   <component name="ProjectConfigurationFiles">
@@ -187,7 +204,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="10" />
     <option name="y" value="20" />
     <option name="width" value="1346" />
@@ -268,15 +285,16 @@
       <workItem from="1565747335459" duration="64000" />
       <workItem from="1565748037060" duration="625000" />
       <workItem from="1565751731328" duration="613000" />
+      <workItem from="1566369470221" duration="40000" />
+      <workItem from="1566634467416" duration="130000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5203000" />
+    <option name="totallyTimeSpent" value="5373000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.19969743" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -346,6 +364,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8664">
+          <caret line="461" column="18" selection-start-line="461" selection-start-column="18" selection-end-line="461" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1235">
@@ -353,17 +381,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1128">
-          <caret line="450" column="18" selection-start-line="450" selection-start-column="18" selection-end-line="450" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171" />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/config/wechat.php">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>

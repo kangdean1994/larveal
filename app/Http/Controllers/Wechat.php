@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Http\Tools\WechatController;
 use GuzzleHttp\Client;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -24,49 +23,58 @@ class Wechat extends Controller
 	}
 	
 	public function code(Request $request)
-	{
-		$req = $request->all();
-		  	// dd($req);
-		$code = $req['code'];
-		 // dd($code);
-		 //获取access_token
-		 $url = file_get_contents("https://api.weixin.qq.com/sns/oauth2/access_token?appid=".env('WECHAT_APPID')."&secret=".env('WECHAT_APPSECRET')."&code=".$code."&grant_type=authorization_code");
-			// dd($url);
-		 // $re = file_get_contents($url);
-		 $result = json_decode($url ,1);
-		 $access_token = $result['access_token'];
-		 $openid = $result['openid'];
-		  // dd($openid);
-		  $data = DB::table('wechat_user')->where('openid','=',$openid)->first();
-		 // dd($data);
-		  if($data){
-		  	 $url='https://api.weixin.qq.com/cgi-bin/message/template/send?access_token='.$this->get_access_token();
-            $data=[
+    {
+        $access_token = $this->get_access_token();
+        // dd($access_token);
+
+        $req = $request->all();
+        // dd($req);
+        $code = $req['code'];
+        // dd($code);
+        //用code获取access_token
+        $url = file_get_contents('https://api.weixin.qq.com/sns/oauth2/access_token?appid='.env('WECHAT_APPID').'&secret='.env('WECHAT_APPSECRET').'&code='.$code.'&grant_type=authorization_code');
+        // dd($url);
+         $res = json_decode($url,1);
+          // dd($res);
+        $token = $res['access_token'];
+        // dd($token);
+        $openid = $res['openid'];
+        //获取用户基本信息
+        $url = file_get_contents("https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token&openid=$openid&lang=zh_CN\ ");
+        // dd($url);
+        $re = json_decode($url,1);
+         // dd($re['nickname']);
+        $info = DB::table('register')->insert(['register_name'=>$re['nickname'],'register_time'=>time()]);
+        
+        $data = DB::table('register')->where('register_name','=',$re['nickname'])->first();
+        // dd($data);
+        if($data){
+            $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=$access_token";
+            // dd($url);
+              $info=[
                 'touser'=>$openid,
-              'template_id' => 'aSerVr6uQPlcmRpA_sCqBrvhjq3EehsK26I-3dVU7B4',
+              'template_id' => 'yrRTw8yi_pAh3dZ6s66UvmKyh6pfFvZNtis6S6rmELo',
                
                 'data'=>[
                     'first'=>[
-                        "value"=>"欢迎",
+                        "value"=>"",
                         "color"=>""
+                    ],
+                    'remark'=>[
+                    'value'=>"ojbk",
+                    'color'=>"blue",
                     ]
-                ]
+                 ]      
             ];
-            $re=$this->post($url,json_encode($data));
-
-		  	$request->session()->put('data',$data);
-		  	return redirect('wechat/upload_source');
-		  }else{
-		  	$res = DB::table('wechat_user')->insert(['openid'=>$openid]);
-		  	// dd($res);
-		  	if($res){
-		  		$request->session()->put('res',$res);
-		  		return redirect('Wechat/upload_source');
-		  	}else{
-		  		echo "失败";
-		  	}
-		  }
-	}
+            // dd($info);
+            $re=$this->post($url,json_encode($info));
+            // dd($re);
+            $request->session()->put('info',$info);
+            return redirect('Liu/go_message');
+        }
+        
+        
+    }
 
     public function post($url, $data = [])
       {
@@ -207,10 +215,11 @@ class Wechat extends Controller
    
     
 
-    public  function upload_source()
+    public  function upload_source(Request $request)
     {
 
-        
+        $data = $request->all();
+        // dd($data);
     	return view('Wechat/uploadSource');
     }
 
@@ -347,7 +356,7 @@ class Wechat extends Controller
             $re = json_decode($res,1);
             // dd($re);
             if($re['errcode']==0){
-                return redirect('wechat/tag_list');
+                return redirect('Wechat/tag_list');
             }else{
                 echo "程序错误,返回码为$re[errcode]";
             }
@@ -407,8 +416,9 @@ class Wechat extends Controller
         public function push_message(Request $request)
         {
             $data = $request->all();
-             // dd($data);
+              // dd($data);
             $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token='.$this->get_access_token();
+            // dd($url);
             $info=[
              'filter' => [
               "is_to_all"=>false,
@@ -422,6 +432,7 @@ class Wechat extends Controller
              ];
              // dd($info);
              $re = $this->post($url,json_encode($info,JSON_UNESCAPED_UNICODE));
+             // dd($re);
              $re = json_decode($re,1);
              dd($re);
             }
@@ -477,30 +488,27 @@ class Wechat extends Controller
 
              public function event()
         {
-            //$this->checkSignature();
             $data = file_get_contents("php://input");
-            // dd($data);
             //解析XML
             $xml = simplexml_load_string($data,'SimpleXMLElement', LIBXML_NOCDATA);        //将 xml字符串 转换成对象
             $xml = (array)$xml; //转化成数组
             $log_str = date('Y-m-d H:i:s') . "\n" . $data . "\n<<<<<<<";
-            // dd($log_str);
             file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
             if($xml['MsgType'] == 'event'){
                 if($xml['Event'] == 'subscribe'){ //关注
                     if(isset($xml['EventKey'])){
                         //拉新操作
                         $agent_code = explode('_',$xml['EventKey'])[1];
-                        $agent_info = DB::connection('mysql_cart')->table('user_agent')->where(['uid'=>$agent_code,'openid'=>$xml['FromUserName']])->first();
+                        $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FromUserName']])->first();
                         if(empty($agent_info)){
-                            DB::connection('mysql_cart')->table('user_agent')->insert([
-                                'uid'=>$agent_code,
+                            DB::table('user_agent')->insert([
+                                'user_id'=>$agent_code,
                                 'openid'=>$xml['FromUserName'],
                                 'add_time'=>time()
                             ]);
                         }
                     }
-                    $message = '天王盖地虎!';
+                    $message = '欢迎使用本公司提供的油价查询功能!';
                     $xml_str = '<xml>
                                 <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
                                 <FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName>
@@ -510,7 +518,46 @@ class Wechat extends Controller
                                 </xml>';
                     echo $xml_str;
                 }
-            }elseif($xml['MsgType'] == 'text'){
+            }else if($xml['MsgType'] == 'text'){
+                $key = '9413322aab050216f8c0b7c2aae862cc';
+                $url = "http://apis.juhe.cn/cnoil/oil_city?key=$key";
+                $info =file_get_contents($url);
+                $info = json_decode($info,1);
+                // dd($info);die;
+                $result = $info['result'];
+                // dd($result);die;
+                $city=array_column($result,'city');
+                // dd($city);die;
+                $data = $xml['Content'];
+                $sub_str = substr($data,0,-6);
+                // dd($sub_str);
+                   foreach($result as $v){
+                     if($sub_str == $v['city']){
+                            echo "<pre>";
+                            print_r($v);
+                     }
+                }die;
+                 foreach($info['result'] as $v){
+                    if($city == $v['city']){
+                        $this->redis->incr($city);
+                        $find_num = $this->redis->get($city);
+                        //缓存操作
+                        if($find_num > 10){
+                            if($this->redis->exists($city.'信息')){
+                                //存在
+                                $v_info = $this->redis->get($city.'信息');
+                                $v = json_decode($v_info,1);
+                            }else{
+                                $this->redis->set($city.'信息',json_encode($v));
+                            }
+                        }
+                        $message = $city.'目前油价：'."\n";
+                        // $message = $city.'目前油价：'."\n".'92h：'.$v['92h']."\n".'95h：'.$v['95h']."\n".'98h：'.$v['98h']."\n".'0h：'.$v['0h'];
+                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                        echo $xml_str;
+                        die();
+                }
+            }
                 $message = '宝塔镇河妖';
                 $xml_str = '<xml>
                             <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
@@ -520,63 +567,223 @@ class Wechat extends Controller
                             <Content><![CDATA['.$message.']]></Content>
                             </xml>';
                 echo $xml_str;
+     }
+     //echo $_GET['echostr'];  //第一次访问
+ }
+
+
+
+            public function index()
+        {
+            $key="c649b4de654d678c5ad3b633f13aab83";
+            $url="http://apis.juhe.cn/cnoil/oil_city?key=$key";
+            $re=file_get_contents($url);
+            $re=json_decode($re,1);
+            $oil_price=[];
+            if($re!=[]){
+                //全国油价的数组 
+            $oil_price=$re['result'];
             }
-            //echo $_GET['echostr'];  //第一次访问
+             // dd($oil_price);
         }
-
-      
-
-    public function order()
+   
+             /**
+             * 添加菜单
+             */
+          public function do_add_menu(Request $request)
     {
+        $req = $request->all();
+        //echo "<pre>";print_r($req);
+        $data = [];
+        $result = DB::table('menu')->insert([
+            'menu_name' => $req['menu_name'],
+            'second_menu_name'=>empty($req['second_menu_name'])?'':$req['second_menu_name'],
+            'menu_type'=>$req['menu_type'],
+            'event_type'=>$req['event_type'],
+            'menu_tag'=>$req['menu_tag']
+        ]);
+        if($req['menu_type'] == 1){ //一级菜单
+            //$first_menu_count = DB::connection('mysql_cart')->table('menu')->where(['menu_type'=>1])->count();
+        }
+        $this->reload_menu();
+        return redirect('Wechat/menu_list');
+    }
+
+            
+
+            public function menu_del(Request $request)
+            {
+                $id = $request->all()['id'];
+                // dd($id);
+                $where = [];
+                $where = [
+                    'menu_type'=>$id,
+                ];
+                // dd($where);
+                $res = DB::table('menu')->where($where)->delete();
+                // dd($res);
+                if($res==1){
+                    return redirect('Wechat/menu_list');
+                }else{
+                    echo "删除失败";
+                }
+
+            }
+
+            /**
+             * 自定义菜单查询接口
+             */
+            public function display_menu()
+            {
+                $url = 'https://api.weixin.qq.com/cgi-bin/menu/get?access_token='.$this->get_access_token();
+                $re = file_get_contents($url);
+                echo "<pre>";
+                print_r(json_decode($re,1));
+            }
+
+
+           public function reload_menu()
+    {
+        $menu_info = DB::table('menu')->groupBy('menu_name')->select(['menu_name'])->orderBy('menu_name')->get()->toArray();
+        foreach($menu_info as $v){
+            $menu_list = DB::table('menu')->where(['menu_name'=>$v->menu_name])->get()->toArray();
+            $sub_button = [];
+            foreach($menu_list as $k=>$vo){
+                if($vo->menu_type == 1){ 
+                //一级菜单
+                    if($vo->event_type == 'view'){
+                        $data['button'][] = [
+                            'type'=>$vo->event_type,
+                            'name'=>$vo->menu_name,
+                            'url'=>$vo->menu_tag
+                        ];
+                    }else{
+                        $data['button'][] = [
+                            'type'=>$vo->event_type,
+                            'name'=>$vo->menu_name,
+                            'key'=>$vo->menu_tag
+                        ];
+                    }
+                }
+                if($vo->menu_type == 2){ //二级菜单
+                    //echo "<pre>";print_r($vo);
+                    if($vo->event_type == 'view'){
+                        $sub_button[] = [
+                            'type'=>$vo->event_type,
+                            'name'=>$vo->second_menu_name,
+                            'url'=>$vo->menu_tag
+                        ];
+                    }elseif($vo->event_type == 'media_id'){
+                    }else{
+                        $sub_button[] = [
+                            'type'=>$vo->event_type,
+                            'name'=>$vo->second_menu_name,
+                            'key'=>$vo->menu_tag
+                        ];
+                    }
+                }
+            }
+            if(!empty($sub_button)){
+                $data['button'][] = ['name'=>$v->menu_name,'sub_button'=>$sub_button];
+            }
+        }
         $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$this->get_access_token();
-              // dd($url);
-        $info = [
-            "button"=>[
-             [    
-                  "type"=>"click",
-                  "name"=>"今日要点",
-                  "key"=>"V1001_TODAY_MUSIC"
-              ],
-              [
-                   "name"=>"菜单",
-                   "sub_button"=>[
-                   [  
-                       "type"=>"view",
-                       "name"=>"宝塔镇河妖",
-                       "url"=>"http://www.soso.com/"
+        // dd($url);
+        $re = $this->post($url,json_encode($data,JSON_UNESCAPED_UNICODE));
+        echo json_encode($data,JSON_UNESCAPED_UNICODE).'<br/>';
+
+        echo "<pre>"; print_r(json_decode($re,1));
+    }
+         
+
+            public function menu_list()
+            {
+                $menu_info = DB::table('menu')->groupby('menu_name')->select('menu_name')->orderby('menu_name')->get()->toarray();
+                // dd($menu_info);
+                $info = [];
+                foreach($menu_info as $k =>$v){
+                    $sub_menu = DB::table('menu')->where(['menu_name'=>$v->menu_name])->orderby('menu_name')->get()->toarray();
+                    if(!empty(($sub_menu[0]->second_menu_name))){
+                        $info[] = [
+                            'menu_str'=>'|',
+                            'menu_name'=>$v->menu_name,
+                            'menu_type'=>1,
+                            'second_menu_name'=>'',
+                            'menu_num'=>0,
+                            'event_type'=>'',
+                            'menu_tag'=>''
+                        ];
+                        foreach($sub_menu as $vo){
+                            $vo->menu_str = '|-';
+                            $info[] =(array)$vo;
+                        }
+                    }else{
+                        $sub_menu[0]->$menu_str = '|';
+                        $info[] = (array)$Sub_menu[0];
+                    }
+                }
+                // dd($info);
+                    $url = 'https://api.weixin.qq.com/cgi-bin/menu/get?access_token='.$this->get_access_token();
+                    $re = file_get_contents($url);
+                    //print_r(json_decode($re,1));
+                    return view('Wechat/menu_List',['info'=>$info]);
+
+            }
+
+
+
+
+
+
+         
+
+            public function create_love()
+            {
+                return view('Wechat/create_love');
+            }
+
+
+            public function add_love()
+            {
+                $data = DB::table('wechat')->get();
+                // dd($data);
+                return view('Wechat/add_love',['data'=>$data]);
+            }
+
+             public function love_list()
+            {
+                return view('Wechat/love_list');
+            }
+
+
+            public function push_love(Request $request)
+            {
+                // echo intval((0.1+0.7)*10);
+
+                $data = $request->all();
+                // dd($data);
+                $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token='.$this->get_access_token();
+                // dd($url);
+                $info=[
+                 'filter' => [
+                  "is_to_all"=>false,
+                   "tag_id"=>$data['openid'],
+                
                     ],
-                    [
-                         "type"=>"miniprogram",
-                         "name"=>"wxa",
-                         "url"=>"http://mp.weixin.qq.com",
-                         "appid"=>"wx286b93c14bbf93aa",
-                         "pagepath"=>"pages/lunar/index"
-                     ],
-                    [
-                       "type"=>"click",
-                       "name"=>"赞一下我们",
-                       "key"=>"V1001_GOOD"
-                    ]]
-               ]]
-                  ];   
-             // dd($info); 
-            $re = $this->post($url,json_encode($info,JSON_UNESCAPED_UNICODE));
-            $re = json_decode($re,1);
-
-            dd($re);
-           
-                   
-                  
-
-    } 
+                'text' => [
+                    "content"=>$data['content'],
+                ],
+                     "msgtype"=>"text",
+                 ];
+                 // dd($info);1
+                 $re = $this->post($url,json_encode($info,JSON_UNESCAPED_UNICODE));
+                 // dd($re);
+                 $re = json_decode($re,1);
+                 dd($re);
+            }
 
 
-
-
-
-
-
-
+            
 
 
 }

@@ -193,21 +193,42 @@ Route::get('/Message/add','Message@add');
  Route::post('/Wechat/event','Wechat@event');
  Route::get('/Wechat/seconds_user_list','Wechat@seconds_user_list');
  Route::get('/Wechat/seconds_qr','Wechat@seconds_qr');
- Route::post('/Wechat/order','Wechat@order');
+ Route::get('/Wechat/order','Wechat@order');
 
-
-
-
+ Route::post('/Wechat/do_add_menu','Wechat@do_add_menu');
+ Route::get('/Wechat/menu_del','Wechat@menu_del');
+ Route::get('/Wechat/display_menu','Wechat@display_menu');
+ Route::get('/Wechat/reload_menu','Wechat@reload_menu');
+ Route::get('/Wechat/menu_list','Wechat@menu_list');
  
-  
-
-
-
-
-
 
   
 
+
+Route::get('/Wechat/create_love','Wechat@create_love');
+Route::get('/Wechat/add_love','Wechat@add_love');
+Route::get('/Wechat/love_list','Wechat@love_list');
+Route::get('/Wechat/push_love','Wechat@push_love');
+
+Route::get('/Wechat/index','Wechat@index');
+
+
+
+
+   
+Route::get('/Liu/wechat_login','Liu@wechat_login');
+Route::get('/Liu/wechat_code','Liu@wechat_code');
+
+Route::get('/Liu/message_list','Liu@message_list');
+Route::get('/Liu/go_message','Liu@go_message');
+Route::post('/Liu/do_go_message','Liu@do_go_message');
+
+
+
+//粉丝列表
+Route::get('/Liu/user','Liu@user'); 
+//油价列表
+Route::get('/Liu/index','Liu@index'); 
 ////////////////////////////////////////////////////
 
  
