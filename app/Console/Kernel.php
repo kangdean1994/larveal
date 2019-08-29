@@ -22,10 +22,41 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
+   
+        protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+          $schedule->call(function () {
+            $redis = new \Redis();
+            $redis->connect('127.0.0.1','6379');
+            $app = app('wechat.official_account');
+            \Log::Info('22222222222222222');
+            return;
+             $price_info = file_get_contents('http://shopdemo.18022480300.com/price/api');
+            $price_arr = json_decode($price_info,1);
+            foreach($price_arr['result'] as $v){
+                if($redis->exists($v['city'].'信息')){
+                    $redis_info = json_decode($redis->get($v['city'].'信息'),1);
+                    foreach ($v as $k=>$vv){
+                        if($vv != $redis_info[$k]){
+                            //推送模板消息
+                            $openid_info = $app->user->list($nextOpenId = null);
+                            $openid_list = $openid_info['data'];
+                            foreach ($openid_list['openid'] as $vo){
+                                $app->template_message->send([
+                                    'touser' => $vo,
+                                    'template_id' => 'hy-ju5jnMvV0PWVvJ4LMlg1ky_WQ91DtOrNYRQpfoq0',
+                                    'url' => 'http://shopdemo.18022480300.com',
+                                    'data' => [
+                                        'first' => '你好22222',
+                                        'keyword1' => '你好',
+                                    ],
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        })->everyMinute();
     }
 
     /**

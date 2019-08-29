@@ -44,7 +44,7 @@ class Admin extends Controller
 		// dd($register_name);
 		$request->session()->put('register_name',$count);
 		
-		return redirect('Message/add');
+		return redirect('Kao/create_class');
 	}else{
 
 	 return redirect('Admin/login');

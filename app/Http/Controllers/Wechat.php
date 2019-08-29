@@ -508,7 +508,7 @@ class Wechat extends Controller
                             ]);
                         }
                     }
-                    $message = '欢迎使用本公司提供的油价查询功能!';
+                    $message = '欢迎xx同学进入选课系统!';
                     $xml_str = '<xml>
                                 <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
                                 <FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName>
@@ -531,33 +531,19 @@ class Wechat extends Controller
                 $data = $xml['Content'];
                 $sub_str = substr($data,0,-6);
                 // dd($sub_str);
+                $arry = [];
                    foreach($result as $v){
                      if($sub_str == $v['city']){
                             echo "<pre>";
-                            print_r($v);
+                            // print_r($v);
+                            $array = $v;
                      }
-                }die;
-                 foreach($info['result'] as $v){
-                    if($city == $v['city']){
-                        $this->redis->incr($city);
-                        $find_num = $this->redis->get($city);
-                        //缓存操作
-                        if($find_num > 10){
-                            if($this->redis->exists($city.'信息')){
-                                //存在
-                                $v_info = $this->redis->get($city.'信息');
-                                $v = json_decode($v_info,1);
-                            }else{
-                                $this->redis->set($city.'信息',json_encode($v));
-                            }
-                        }
-                        $message = $city.'目前油价：'."\n";
-                        // $message = $city.'目前油价：'."\n".'92h：'.$v['92h']."\n".'95h：'.$v['95h']."\n".'98h：'.$v['98h']."\n".'0h：'.$v['0h'];
-                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                        echo $xml_str;
-                        die();
                 }
-            }
+                       // $message = $city.'目前油价：'."\n";
+                        $message = $array['city'].'目前油价：'."\n".'92h：'.$array['92h']."\n".'95h：'.$array['95h']."\n".'98h：'.$array['98h']."\n".'0h：'.$array['0h'];
+                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+                        echo $xml_str;die;
+           
                 $message = '宝塔镇河妖';
                 $xml_str = '<xml>
                             <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
@@ -570,6 +556,80 @@ class Wechat extends Controller
      }
      //echo $_GET['echostr'];  //第一次访问
  }
+
+
+
+
+ // public function event()
+ //        {
+ //            $data = file_get_contents("php://input");
+ //            //解析XML
+ //            $xml = simplexml_load_string($data,'SimpleXMLElement', LIBXML_NOCDATA);        //将 xml字符串 转换成对象
+ //            $xml = (array)$xml; //转化成数组
+ //            $log_str = date('Y-m-d H:i:s') . "\n" . $data . "\n<<<<<<<";
+ //            file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
+ //            if($xml['MsgType'] == 'event'){
+ //                if($xml['Event'] == 'subscribe'){ //关注
+ //                    if(isset($xml['EventKey'])){
+ //                        //拉新操作
+ //                        $agent_code = explode('_',$xml['EventKey'])[1];
+ //                        $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FromUserName']])->first();
+ //                        if(empty($agent_info)){
+ //                            DB::table('user_agent')->insert([
+ //                                'user_id'=>$agent_code,
+ //                                'openid'=>$xml['FromUserName'],
+ //                                'add_time'=>time()
+ //                            ]);
+ //                        }
+ //                    }
+ //                    $message = '欢迎使用本公司提供的油价查询功能!';
+ //                    $xml_str = '<xml>
+ //                                <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
+ //                                <FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName>
+ //                                <CreateTime>'.time().'</CreateTime>
+ //                                <MsgType><![CDATA[text]]></MsgType>
+ //                                <Content><![CDATA['.$message.']]></Content>
+ //                                </xml>';
+ //                    echo $xml_str;
+ //                }
+ //            }else if($xml['MsgType'] == 'text'){
+ //                $key = '9413322aab050216f8c0b7c2aae862cc';
+ //                $url = "http://apis.juhe.cn/cnoil/oil_city?key=$key";
+ //                $info =file_get_contents($url);
+ //                $info = json_decode($info,1);
+ //                // dd($info);die;
+ //                $result = $info['result'];
+ //                // dd($result);die;
+ //                $city=array_column($result,'city');
+ //                // dd($city);die;
+ //                $data = $xml['Content'];
+ //                $sub_str = substr($data,0,-6);
+ //                // dd($sub_str);
+ //                $arry = [];
+ //                   foreach($result as $v){
+ //                     if($sub_str == $v['city']){
+ //                            echo "<pre>";
+ //                            // print_r($v);
+ //                            $array = $v;
+ //                     }
+ //                }
+ //                       // $message = $city.'目前油价：'."\n";
+ //                        $message = $array['city'].'目前油价：'."\n".'92h：'.$array['92h']."\n".'95h：'.$array['95h']."\n".'98h：'.$array['98h']."\n".'0h：'.$array['0h'];
+ //                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
+ //                        echo $xml_str;die;
+           
+ //                $message = '宝塔镇河妖';
+ //                $xml_str = '<xml>
+ //                            <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
+ //                            <FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName>
+ //                            <CreateTime>'.time().'</CreateTime>
+ //                            <MsgType><![CDATA[text]]></MsgType>
+ //                            <Content><![CDATA['.$message.']]></Content>
+ //                            </xml>';
+ //                echo $xml_str;
+ //     }
+ //     //echo $_GET['echostr'];  //第一次访问
+ // }
 
 
 

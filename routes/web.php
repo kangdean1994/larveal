@@ -232,3 +232,11 @@ Route::get('/Liu/index','Liu@index');
 ////////////////////////////////////////////////////
 
  
+ Route::get('/Kao/login','Kao@login');
+ Route::get('/Kao/code','Kao@code');
+ Route::get('/Kao/get_access_token','Kao@get_access_token');
+ Route::post('/Kao/event','Kao@event');
+ Route::get('/Kao/create_class','Kao@create_class');
+ Route::get('/Kao/do_class','Kao@do_class');
+ Route::get('/Kao/class_list','Kao@class_list');
+   

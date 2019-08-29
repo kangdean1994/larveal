@@ -26,7 +26,7 @@
 						</div>
 						<a href=""><h6>Forgot Password ?</h6></a>
 						<input type="submit" class="btn button-default" value="LOGIN">
-						<h6><a href="{{url('Wechat/login')}}">第三方登录</a></h6>
+						<h6><a href="{{url('Kao/login')}}">第三方登录</a></h6>
 					</form>
 
 				</div>
