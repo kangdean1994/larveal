@@ -239,4 +239,22 @@ Route::get('/Liu/index','Liu@index');
  Route::get('/Kao/create_class','Kao@create_class');
  Route::get('/Kao/do_class','Kao@do_class');
  Route::get('/Kao/class_list','Kao@class_list');
+
+  Route::get('/Kao/file_get','Kao@file_get');
+  Route::get('/Kao/file_list','Kao@file_list');
    
+
+
+
+
+Route::get('/Kao/sign','Kao@sign');
+//////////////////////////////////
+ Route::get('/Wechat/fruit_add','Wechat@fruit_add');
+ Route::post('/Wechat/fruit_do_add','Wechat@fruit_do_add');
+ Route::get('/Wechat/fruit_list','Wechat@fruit_list');
+ Route::get('/Wechat/fruit_del','Wechat@fruit_del');
+ Route::get('/Wechat/fruit_update','Wechat@fruit_update');
+ Route::get('/Wechat/fruit_do_update','Wechat@fruit_do_update');
+ 
+  
+/////////////////////////////////

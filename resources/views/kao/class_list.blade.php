@@ -8,6 +8,7 @@
   	<h2>欢迎{{$name}}同学，下面是你的课程</h2>
   	<table border='1'>
   		<tr>
+  			<td>用户</td>
   			<td>第一节课</td>
   			<td>第二节课</td>
   			<td>第三节课</td>
@@ -15,6 +16,7 @@
   		</tr>
   		@foreach($data as $v)
   		<tr>
+  			<td>{{$v->user_name}}</td>
   			<td>{{$v->first_class}}</td>
   			<td>{{$v->second_class}}</td>
   			<td>{{$v->three_class}}</td>

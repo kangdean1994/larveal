@@ -67,7 +67,7 @@ class Kao extends Controller
             $re=$this->post($url,json_encode($info));
             // dd($re);
             $request->session()->put('info',$info);
-            return redirect('Kao/create_class');
+            return redirect('kao/create_class');
         }
         
         
@@ -84,55 +84,29 @@ class Kao extends Controller
             $log_str = date('Y-m-d H:i:s') . "\n" . $data . "\n<<<<<<<";
             file_put_contents(storage_path('logs/wx_event.log'),$log_str,FILE_APPEND);
             if($xml['MsgType'] == 'event'){
-                if($xml['Event'] == 'subscribe'){ //关注
-                    if(isset($xml['EventKey'])){
+                if($xml['Event'] == 'subscribe') { //关注
+                    if (isset($xml['EventKey'])) {
                         //拉新操作
-                        $agent_code = explode('_',$xml['EventKey'])[1];
-                        $agent_info = DB::table('user_agent')->where(['user_id'=>$agent_code,'openid'=>$xml['FromUserName']])->first();
-                        if(empty($agent_info)){
+                        $agent_code = explode('_', $xml['EventKey'])[1];
+                        $agent_info = DB::table('user_agent')->where(['user_id' => $agent_code, 'openid' => $xml['FromUserName']])->first();
+                        if (empty($agent_info)) {
                             DB::table('user_agent')->insert([
-                                'user_id'=>$agent_code,
-                                'openid'=>$xml['FromUserName'],
-                                'add_time'=>time()
+                                'user_id' => $agent_code,
+                                'openid' => $xml['FromUserName'],
+                                'add_time' => time()
                             ]);
                         }
                     }
                     $message = '欢迎xx同学进入选课系统';
                     $xml_str = '<xml>
-                                <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
-                                <FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName>
-                                <CreateTime>'.time().'</CreateTime>
+                                <ToUserName><![CDATA[' . $xml['FromUserName'] . ']]></ToUserName>
+                                <FromUserName><![CDATA[' . $xml['ToUserName'] . ']]></FromUserName>
+                                <CreateTime>' . time() . '</CreateTime>
                                 <MsgType><![CDATA[text]]></MsgType>
-                                <Content><![CDATA['.$message.']]></Content>
+                                <Content><![CDATA[' . $message . ']]></Content>
                                 </xml>';
                     echo $xml_str;
                 }
-            }else if($xml['MsgType'] == 'text'){
-                $key = '9413322aab050216f8c0b7c2aae862cc';
-                $url = "http://apis.juhe.cn/cnoil/oil_city?key=$key";
-                $info =file_get_contents($url);
-                $info = json_decode($info,1);
-                // dd($info);die;
-                $result = $info['result'];
-                // dd($result);die;
-                $city=array_column($result,'city');
-                // dd($city);die;
-                $data = $xml['Content'];
-                $sub_str = substr($data,0,-6);
-                // dd($sub_str);
-                $arry = [];
-                   foreach($result as $v){
-                     if($sub_str == $v['city']){
-                            echo "<pre>";
-                            // print_r($v);
-                            $array = $v;
-                     }
-                }
-                       // $message = $city.'目前油价：'."\n";
-                        $message = $array['city'].'目前油价：'."\n".'92h：'.$array['92h']."\n".'95h：'.$array['95h']."\n".'98h：'.$array['98h']."\n".'0h：'.$array['0h'];
-                        $xml_str = '<xml><ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName><FromUserName><![CDATA['.$xml['ToUserName'].']]></FromUserName><CreateTime>'.time().'</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA['.$message.']]></Content></xml>';
-                        echo $xml_str;die;
-           
                 $message = '宝塔镇河妖';
                 $xml_str = '<xml>
                             <ToUserName><![CDATA['.$xml['FromUserName'].']]></ToUserName>
@@ -150,24 +124,42 @@ class Kao extends Controller
 
  	public function create_class()
  	{
- 		return view('Kao/create_class');
+ 		
+ 		return view('kao/create_class');
  	}
 
 
  	public function do_class(Request $request)
  	{
- 		$data = $request->all();
+ 		$info = DB::table('register')->orderBy('register_id','desc')->first();
+ 		$info = get_object_vars($info);
+ 		// dd($info['register_name']);
+ 		$time = time();
+ 		// dd($time);
+ 		$new_time = strtotime('2019-09-01 00:00');
+ 		if($time > $new_time){
+ 			dd("很抱歉,课程这能在9余1日前修改");
+ 		}else{
+ 			$data = $request->all();
  		// dd($data);
- 		$res = DB::table('myclass')->insert(['first_class'=>$data['first_class'],'second_class'=>$data['second_class'],'three_class'=>$data['three_class'],'four_class'=>$data['four_class'],'add_time'=>time()]);
+ 		$res = DB::table('myclass')->insert(['first_class'=>$data['first_class'],'second_class'=>$data['second_class'],'three_class'=>$data['three_class'],'four_class'=>$data['four_class'],'user_name'=>$info['register_name'],'add_time'=>time()]);
  		if($res){
- 			return redirect('Kao/class_list');
+ 			return redirect('kao/class_list');
  		}
+ 	}
+ 		
+ 		
  	}
 
 
  	public function class_list()
  	{
- 		$id = DB::table('myclass')->first();
+ 		$count = DB::table('myclass')->where('user_name')->count();
+ 		// dd($count);
+ 		if($count>3){
+ 			dd("每名学院只有三次修改课程的机会") ;
+ 		}else{
+ 			$id = DB::table('myclass')->first();
  		if($id == null){
  			echo "请先选择课程";
  			header('Location:'.'create_class');
@@ -177,41 +169,12 @@ class Kao extends Controller
  			$name = $info['register_name'];
  			// dd($info['register_name']);
  			$data = DB::table('myclass')->get();
- 			return view('Kao/class_list',['data'=>$data,'name'=>$name]);
+ 			return view('kao/class_list',['data'=>$data,'name'=>$name]);
+ 		}
  		}
  		
+ 		
  	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -269,6 +232,153 @@ class Kao extends Controller
     	}
     	return $access_token;
     }
+
+
+
+
+
+    //连续签到
+
+    public function  sign()
+    {
+        //是否连续签到
+        $isContinue = false;
+        //取出用户最后一次签到的数据
+       $info =  DB::table('sign')->where('user_id',1)->orderBy('id','desc')->first();
+       // dd($info);
+       //判断今日是否签到
+       if($info){
+        //取出最后一次签到的时间
+        $last_time = $info->sign_time;
+        //今日0点的时间
+        $new_time = date("Y-m-d 00:00:00");
+        $new_time = strtotime($new_time);
+        if($last_time > $new_time){
+            echo "今日已签到";die;
+        }
+        //通过时间判断是否连续签到 昨日0晨 - 昨天24时（今天的0晨）
+        if($last_time <$new_time && $last_time>$new_time-86400){
+            $isContinue = true;
+        }
+       }
+        //签到 入库 签到记录表 
+        DB::table('sign')->insert(['user_id'=>1,'sign_time'=>time()]);
+        //签到 记录用户表修改连续签到天数 分数
+
+        //查询用户原有积分数据  连续签到天数
+        $data = DB::table('sign_user')->where('id',1)->first();
+        $sign_day =$data->sign_day;
+        $fen = $data->fen;
+        //连续签到积分递增
+        if($isContinue && $sign_day<5){
+            $sign_day = $sign_day+1;
+            $fen = $fen + $sign_day*5;
+        }else{
+            $sign_day = 1;
+            $fen = $fen+5;
+        }
+        $res = DB::table('sign_user')
+        ->where('id',1)
+        ->update(['sign_day'=>$sign_day,'fen'=>$fen]);
+        echo "签到成功";die;
+    }
+
+
+
+    public function file_list()
+    {
+        echo "wa ha ha";
+    }
+
+
+    public function file_get()
+    {
+        // echo 111;die;
+        //php发送http请求
+        // file_get_contents发送get请求
+        $url = "http://www.larveral.com/Kao/file_list";
+
+        $data = file_get_contents($url);
+
+        // var_dump($data);die;
+
+
+        //发送post请求
+        // $url = "http://localhost/1901/post.php";
+        // $info = [
+        //      'name'=>'zhangsan',
+        //      'age'=>'11'
+        // ];
+        // ///
+        // $context = stream_context_create(array(  
+        //  'http' => array(  
+        //          'method' => 'POST',  
+        //          'header' => 'Content-type:application/x-www-form-urlencoded',
+        //          'content' => http_build_query($info),   // ?name=zhangsan&age=11
+        //          'timeout' => 20
+        //     )  
+
+        // ));  
+
+        // $result = file_get_contents($url, false, $context);
+
+        // var_dump($result);die;
+
+
+
+        //curl方式
+        //php使用curl方式  发送get请求
+        //1初始化
+        // $ch = curl_init();
+        // //2设置
+        // curl_setopt($ch,CURLOPT_URL,$url); //访问地址
+        // curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); //返回格式 
+        // //请求网址是https
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false); // 对认证证书来源的检查
+        // //3执行
+        // $content = curl_exec($ch);
+        // //4关闭 
+        // curl_close($ch);
+        // return $content; 
+
+        //php  curl发送post请求
+        //1初始化
+        // $ch = curl_init();
+        //2设置
+        // curl_setopt($ch,CURLOPT_URL,$url); //访问地址
+        // curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); //返回格式 
+        // curl_setopt($ch,CURLOPT_POST, 1); // 发送一个常规的Post请求
+        // curl_setopt($ch,CURLOPT_POSTFIELDS,$postData); // Post提交的数据包 
+        //如果发送json数据
+        // $header[] = "Content-type: application/json;charset='utf-8'"; //json
+        // curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
+        //请求网址是https
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false); // 对认证证书来源的检查
+        //3执行
+        // $content = curl_exec($ch);
+        //4关闭 
+        // curl_close($ch);
+        // return $content; 
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

@@ -846,4 +846,81 @@ class Wechat extends Controller
             
 
 
+
+
+            public function fruit_add()
+            {
+                return view('fruit/fruit_add');
+            }
+
+              public function fruit_do_add(Request $request)
+            {
+                $data = $request->all();
+                // dd($data);
+                $result = DB::table('fruit')->insert(['fruit_name'=>$data['fruit_name'],'fruit_price'=>$data['fruit_price'],'fruit_address'=>$data['fruit_address'],'fruit_desc'=>$data['fruit_desc'],'create_time'=>time()]);
+                return redirect('Wechat/fruit_list');
+            }
+
+
+            public function fruit_list(Request $request)
+            {
+                $fruit_name = $request->all();
+                // dd($fruit_name);
+                if(empty($fruit_name)){
+                    $data = DB::table('fruit')->paginate(2);
+                }else{
+                    $data = DB::table('fruit')->
+                }
+                return view('fruit/fruit_list',['data'=>$data]);
+            }
+
+            public function fruit_del(Request $request)
+            {
+                $id = $request->all()['id'];
+                // dd($id);
+                $where = [];
+                $where = [
+                        'id'=>$id,
+                    ];
+                    // dd($where);
+                $result = DB::table('fruit')->where($where)->delete();
+                // dd($result);
+                return redirect('Wechat/fruit_list');
+            }
+
+
+
+            public function fruit_update(Request $request)
+            {
+                $id = $request->all()['id'];
+                // dd($id);   
+                 $where = [];
+                $where = [
+                        'id'=>$id,
+                    ];
+                $data = DB::table('fruit')->where($where)->first();
+                $data = get_object_vars($data);
+                // dd($data['id']);     
+                return view('fruit/fruit_update',['data'=>$data]);
+            }
+
+
+            public function fruit_do_update(Request $request)
+            {
+                $data = $request->all();
+                // dd($data);
+                    $where = [];
+                $where = [
+                        'id'=>$data['id'],
+                    ];
+                    // dd($where);
+                $result = DB::table('fruit')->where($where)->update(['fruit_name'=>$data['fruit_name'],'fruit_price'=>$data['fruit_price'],'fruit_address'=>$data['fruit_address'],'fruit_desc'=>$data['fruit_desc']]);
+                return redirect('Wechat/fruit_list');            
+            }
+
+
+
+
+
+
 }

@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dde6186-3173-4edc-85b6-22b1cc5d5d5b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/myshop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/myshop.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Kao.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Kao.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/kao/class_list.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/kao/class_list.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,8 +50,22 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/wechat.php">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Kao.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="337">
+              <caret line="254" column="41" lean-forward="true" selection-start-line="254" selection-start-column="41" selection-end-line="254" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/kao/class_list.blade.php">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -91,6 +102,7 @@
         <option value="$PROJECT_DIR$/app/Http/Controllers/Admin.php" />
         <option value="$PROJECT_DIR$/routes/web.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/Wechat.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/Kao.php" />
       </list>
     </option>
   </component>
@@ -204,7 +216,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="10" />
     <option name="y" value="20" />
     <option name="width" value="1346" />
@@ -233,6 +245,11 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -287,14 +304,24 @@
       <workItem from="1565751731328" duration="613000" />
       <workItem from="1566369470221" duration="40000" />
       <workItem from="1566634467416" duration="130000" />
+      <workItem from="1567047328916" duration="154000" />
+      <workItem from="1567051908747" duration="24000" />
+      <workItem from="1567052241556" duration="69000" />
+      <workItem from="1567052357055" duration="48000" />
+      <workItem from="1567052602761" duration="614000" />
+      <workItem from="1567127396429" duration="861000" />
+      <workItem from="1567212243667" duration="1246000" />
+      <workItem from="1567382704581" duration="593000" />
+      <workItem from="1567393000568" duration="539000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5373000" />
+    <option name="totallyTimeSpent" value="9521000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.19969743" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -311,6 +338,7 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32851985" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="right" id="Remote Host" weight="0.32980332" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -364,6 +392,7 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/~flashfxp/7864D46B_view.tmp/Kao.php" />
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8664">
@@ -374,6 +403,12 @@
     <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/config/wechat.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/kao/class_list.blade.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/web.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1235">
@@ -381,8 +416,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/wechat.php">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Kao.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="254" column="41" lean-forward="true" selection-start-line="254" selection-start-column="41" selection-end-line="254" selection-end-column="41" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
